@@ -1,0 +1,189 @@
+/* GetAllAccounts.css */
+
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Light grey background */
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    margin-bottom: 20px; /* Space below the header */
+}
+
+.btn-go-back {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    padding: 10px 20px; /* Add padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size for button text */
+}
+
+.btn-go-back:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Page Heading */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Search Section Styling */
+.search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.search-by-id, .search-by-date {
+    margin: 10px 0;
+}
+
+.search-by-id input, .search-by-date input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.search-by-id button, .search-by-date button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #007bff; /* Blue background */
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.search-by-id button:hover, .search-by-date button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Page Size Selector Styling */
+.page-size-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.page-size-selector label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.page-size-selector select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.page-size-selector select:focus {
+    border-color: #007BFF; /* Blue border on focus */
+    outline: none;
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    max-width: 1200px; /* Limit the width of the table */
+}
+
+.table th, .table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #4CAF50; /* Dark green background for header */
+    color: white; /* White text for header */
+    font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Light grey background for even rows */
+}
+
+.table tr:hover {
+    background-color: #ddd; /* Light grey background on hover */
+}
+
+/* Pagination Styling */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 8px;
+    padding: 12px 24px;
+    border: 1px solid #007BFF; /* Blue border */
+    background-color: #007BFF; /* Blue background */
+    color: white; /* White text */
+    cursor: pointer;
+    border-radius: 4px; /* Rounded corners */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.pagination button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Darker blue border on hover */
+}
+
+.pagination button:disabled {
+    background-color: #e0e0e0; /* Light grey background when disabled */
+    color: #b0b0b0; /* Grey text when disabled */
+    cursor: not-allowed;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.btn-go-back, .btn-logout {
+    margin: 0 10px;
+}
+
+.btn-logout {
+    background-color: red;
+    color: white;
+}
+
+.search-filter .btn-search {
+    background-color: #28a745; /* Green background for search */
+    color: white;
+}
+
+.search-filter .btn-search:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.search-filter .btn-reset {
+    background-color: #dc3545; /* Red background for reset */
+    color: white;
+}
+
+.search-filter .btn-reset:hover {
+    background-color: #c82333; /* Darker red on hover */
+}

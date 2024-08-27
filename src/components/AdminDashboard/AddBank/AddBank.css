@@ -1,0 +1,103 @@
+/* src/components/AdminDashboard/AddBankModal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8); /* Slightly darker background for better contrast */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow for more depth */
+    position: relative; /* For positioning close button */
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #fff; /* White text color */
+    font-size: 1.6em;
+    border-bottom: 3px solid #007bff; /* Highlight header with color */
+    padding-bottom: 15px;
+    background-color: #007bff; /* Background color for the header */
+    border-radius: 8px 8px 0 0; /* Rounded corners for top */
+    padding: 15px; /* Additional padding for header */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333; /* Darker color for better readability */
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc; /* Light border for better focus */
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1em;
+    background-color: #f9f9f9; /* Light background for input fields */
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    margin-right: 10px; /* Add space between buttons */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+button[type="button"] {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+button[type="button"]:hover {
+    background-color: #5a6268;
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #888;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+

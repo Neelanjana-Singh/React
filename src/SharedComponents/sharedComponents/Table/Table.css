@@ -1,0 +1,113 @@
+/* General Table Styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+/* Table Header Styling */
+.table th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+/* Table Row Hover Effect */
+.table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Alternate Row Styling */
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Pagination Control Styling */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #45a049;
+}
+
+/* Pagination Disabled Button Styling */
+.pagination button:disabled {
+    background-color: #ddd;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.pagination select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+/* Error Message Styling */
+.error {
+    color: #FF0000;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Search and Filter Controls Styling */
+.search-controls {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.search-controls label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.search-controls select,
+.search-controls input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.search-controls button {
+    padding: 8px 12px;
+    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+.search-controls button:hover {
+    background-color: #45a049;
+}

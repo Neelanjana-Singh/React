@@ -1,0 +1,124 @@
+/* Card Layout Container */
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px;
+  background-color: #f8f9fa; /* Light gray background for the layout */
+  border-radius: 10px;
+}
+
+/* Individual Cards */
+.card {
+  background-color: #ff7f50; /* Coral background color for cards */
+  color: #ffffff; /* White text color */
+  border: none;
+  border-radius: 15px;
+  padding: 30px;
+  width: calc(33.333% - 20px); /* Dynamic width based on available space */
+  max-width: 300px; /* Max width to keep cards consistent */
+  min-width: 250px; /* Minimum width to keep cards readable */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  background-color: #e67350; /* Darker coral on hover */
+}
+
+/* Card Title */
+.card h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff; /* White for titles */
+}
+
+/* Card Description */
+.card p {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #ffe4e1; /* Light pink for descriptions */
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 1200px) {
+  .card {
+    width: calc(50% - 20px);
+  }
+
+  .card h3 {
+    font-size: 20px;
+  }
+
+  .card p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: calc(100% - 20px);
+  }
+
+  .card h3 {
+    font-size: 18px;
+  }
+
+  .card p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 20px;
+  }
+
+  .card {
+    padding: 20px;
+    width: calc(100% - 40px);
+  }
+
+  .card h3 {
+    font-size: 16px;
+  }
+
+  .card p {
+    font-size: 14px;
+  }
+}
+
+.btn-logout {
+  position: absolute; /* or fixed depending on your layout */
+  top: 10px;
+  right: 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.btn-logout:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-logout:focus {
+  outline: none;
+}
+
+.btn-logout:disabled {
+  background-color: #e0e0e0;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}
