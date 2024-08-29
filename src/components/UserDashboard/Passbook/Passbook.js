@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { getTransactionsByCustomerId } from '../../../services/apiService';
-//import { getTransactionsByCustomerId } from './appService';
+import './Passbook.css';
 
 const Passbook = ({ customerId }) => {
   const [transactions, setTransactions] = useState([]);
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     fetchTransactions();
@@ -17,11 +19,8 @@ const Passbook = ({ customerId }) => {
   const fetchTransactions = async () => {
     setLoading(true);
     try {
-      
-      const customerId=localStorage.getItem('customerId')
-      console.log(typeof(customerId))
-      const data = await getTransactionsByCustomerId(customerId, page, size);
-      console.log(data.content)
+      const storedCustomerId = localStorage.getItem('customerId'); // Use storedCustomerId instead
+      const data = await getTransactionsByCustomerId(storedCustomerId, page, size);
       setTransactions(data.content);
       setTotalPages(data.totalPages);
     } catch (err) {
@@ -43,9 +42,21 @@ const Passbook = ({ customerId }) => {
     setPage(0); // Reset to first page on size change
   };
 
+  const handleBack = () => {
+    navigate('/user-dashboard'); // Navigate to UserDashboard
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('AuthToken'); // Remove the token
+    localStorage.removeItem('customerId'); // Optionally remove customerId as well
+    navigate('/login'); // Navigate to login page
+  };
+
   return (
     <div>
       <h2>Transactions</h2>
+      <button onClick={handleBack}>Back to Dashboard</button>
+      <button onClick={handleLogout}>Logout</button>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -80,7 +91,7 @@ const Passbook = ({ customerId }) => {
                   <td>{transaction.amount}</td>
                   <td>{transaction.senderAccountNumber}</td>
                   <td>{transaction.receiverAccountNumber}</td>
-                  <td>{transaction.isActive ? 'Active' : 'Inactive'}</td>
+                  <td>{transaction.active ? 'Active' : 'Inactive'}</td>
                 </tr>
               ))}
             </tbody>

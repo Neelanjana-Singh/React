@@ -1,104 +1,114 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAllTransactions, getTransactionById, getTransactionsByDateRange } from '../../../services/apiService';
-import './GetAllTransaction.css'; 
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getAllTransactions, getTransactionById, getTransactionsByDateRange, verifyAdminAccess } from '../../../services/apiService';
+import './GetAllTransaction.css';
 
 const GetAllTransactions = () => {
     const [transactions, setTransactions] = useState([]);
-    const [columns, setColumns] = useState([]); 
+    const [columns, setColumns] = useState([]);
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLast, setIsLast] = useState(false);
-    const [searchId, setSearchId] = useState(''); 
-    const [startDate, setStartDate] = useState(); 
-    const [endDate, setEndDate] = useState(); 
+    const [searchId, setSearchId] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [fetchData, setFetchData] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    
 
     useEffect(() => {
-        fetchTransactions();
-    }, [page, size]);
+        const queryParams = new URLSearchParams(location.search);
+        setPage(parseInt(queryParams.get('pageNumber'), 10) || 0);
+        setSize(parseInt(queryParams.get('pageSize'), 10) || 5);
+        setSearchId(queryParams.get('searchId') || '');
+        setStartDate(queryParams.get('startDate') || '');
+        setEndDate(queryParams.get('endDate') || '');
+        setFetchData(true); // Trigger data fetch when URL params change
+    }, [location.search]);
 
-    const fetchTransactions = async () => {
+
+    useEffect(() => {
+        if (fetchData) {
+            fetchTransactions(page, size, searchId, startDate, endDate);
+            setFetchData(false); // Reset fetchData after fetching
+        }
+    }, [page, size, searchId, startDate, endDate, fetchData]);
+
+    const fetchTransactions = async (page, size, searchId, startDate, endDate) => {
         const token = localStorage.getItem('AuthToken');
         if (!token) {
             console.error('No token found');
-            navigate('/login'); 
+            navigate('/login');
             return;
         }
 
         try {
-            const result = await getAllTransactions(token, page, size);
-            if (result.content && result.content.length > 0) {
-                setColumns(Object.keys(result.content[0])); 
-                setTransactions(result.content);
+            let result;
+            if (searchId) {
+                result = await getTransactionById(token, searchId);
+                setColumns(Object.keys(result));
+                setTransactions([result]);
+                setTotalPages(1);
+                setTotalElements(1);
+                setIsLast(true);
+            } else if (startDate && endDate) {
+                const start = new Date(startDate).toISOString().slice(0, -1);
+                const end = new Date(endDate).toISOString().slice(0, -1);
+                result = await getTransactionsByDateRange(token, start, end, page, size);
+                if (result.content && result.content.length > 0) {
+                    setColumns(Object.keys(result.content[0]));
+                    setTransactions(result.content);
+                } else {
+                    setColumns([]);
+                    setTransactions([]);
+                }
+                setTotalPages(result.totalPages);
+                setTotalElements(result.totalElements);
+                setIsLast(result.isLast);
             } else {
-                setColumns([]);
-                setTransactions([]);
+                result = await getAllTransactions(token, page, size);
+                if (result.content && result.content.length > 0) {
+                    setColumns(Object.keys(result.content[0]));
+                    setTransactions(result.content);
+                } else {
+                    setColumns([]);
+                    setTransactions([]);
+                }
+                setTotalPages(result.totalPages);
+                setTotalElements(result.totalElements);
+                setIsLast(result.isLast);
             }
-            setPage(result.page);
-            setSize(result.size);
-            setTotalPages(result.totalPages);
-            setTotalElements(result.totalElements);
-            setIsLast(result.isLast);
+
+            const queryParams = new URLSearchParams();
+            queryParams.set("pageSize", size);
+            queryParams.set("pageNumber", page);
+            if (searchId) queryParams.set("searchId", searchId);
+            if (startDate) queryParams.set("startDate", startDate);
+            if (endDate) queryParams.set("endDate", endDate);
+
+            navigate({ search: queryParams.toString() }, { replace: true });
         } catch (error) {
             console.error('Error fetching transactions:', error);
         }
     };
 
-    const handleSearchById = async () => {
-        const token = localStorage.getItem('AuthToken');
-        if (!token) {
-            console.error('No token found');
-            navigate('/login');
-            return;
-        }
-
-        try {
-            const result = await getTransactionById(token, searchId);
-            setColumns(Object.keys(result)); 
-            setTransactions([result]);
-            setTotalPages(1);
-            setTotalElements(1);
-            setIsLast(true);
-        } catch (error) {
-            console.error('Error fetching transaction by ID:', error);
-        }
+    const handleSearchById = () => {
+        setPage(0);
+        setFetchData(true);
     };
 
-    const handleSearchByDateRange = async () => {
-        const token = localStorage.getItem('AuthToken');
-        if (!token) {
-            console.error('No token found');
-            navigate('/login');
-            return;
-        }
-
-        try {
-           const start = new Date(startDate).toISOString().slice(0, -1); 
-            const end = new Date(endDate).toISOString().slice(0, -1); 
-            const result = await getTransactionsByDateRange(token, start, end, page, size);
-            if (result.content && result.content.length > 0) {
-                setColumns(Object.keys(result.content[0]));
-                setTransactions(result.content);
-            } else {
-                setColumns([]);
-                setTransactions([]);
-            }
-            setPage(result.page);
-            setSize(result.size);
-            setTotalPages(result.totalPages);
-            setTotalElements(result.totalElements);
-            setIsLast(result.isLast);
-        } catch (error) {
-            console.error('Error fetching transactions by date range:', error);
-        }
+    const handleSearchByDateRange = () => {
+        setPage(0);
+        setFetchData(true);
     };
 
     const handlePageSizeChange = (e) => {
         setSize(parseInt(e.target.value, 10));
         setPage(0);
+        setFetchData(true);
     };
 
     const handleGoBack = () => {
@@ -109,7 +119,9 @@ const GetAllTransactions = () => {
         setSearchId('');
         setStartDate('');
         setEndDate('');
-        fetchTransactions(); 
+        setPage(0);
+        setSize(5); // Reset to default page size
+        setFetchData(true);
     };
 
     return (
@@ -187,14 +199,20 @@ const GetAllTransactions = () => {
             <div className="pagination">
                 <button 
                     disabled={page === 0} 
-                    onClick={() => setPage(page - 1)}
+                    onClick={() => {
+                        setPage(prevPage => prevPage - 1);
+                        setFetchData(true);
+                    }}
                 >
                     Previous
                 </button>
                 <span>Page {page + 1} of {totalPages}</span>
                 <button 
                     disabled={isLast} 
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => {
+                        setPage(prevPage => prevPage + 1);
+                        setFetchData(true);
+                    }}
                 >
                     Next
                 </button>

@@ -1,10 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { verifyAdminAccess } from '../../services/apiService'; // Adjust the path as necessary
-//import AddBankModal from './AddBankModal'; // Import AddBankModal component
+import { verifyAdminAccess } from '../../services/apiService'; 
 import './AdminDashboard.css';
-import AddBankModal from './AddBank/AddBank';
+import AddBankModal from './addBank1/AddBank/AddBank';
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -27,8 +28,7 @@ const AdminDashboard = () => {
     { title: 'Get All Transactions', description: 'View and manage all transactions', route: '/get-all-transactions' },
     { title: 'Get All Banks', description: 'View and manage all banks', route: '/get-all-banks' },
     { title: 'Get All Accounts', description: 'View and manage all accounts', route: '/get-all-accounts' },
-    { title: 'Add Bank', description: 'Add a new bank', onClick: () => setShowAddBankModal(true) }, // Updated to handle modal
-    { title: 'Add Customer', description: 'Add a new customer', route: '/add-customer' }
+    { title: 'Add Bank', description: 'Add a new bank', onClick: () => setShowAddBankModal(true) },
   ];
 
   const handleCardClick = (route) => {
@@ -40,7 +40,6 @@ const AdminDashboard = () => {
     navigate('/login');
   };
 
-  // If not an admin, show nothing
   if (!isAdmin) {
     return null;
   }

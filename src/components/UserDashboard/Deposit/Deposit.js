@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { depositToAccount } from '../../../services/apiService';
-//import './WithdrawDepositModal.css';
+import './Deposit.css'; // Assuming you have a CSS file for styling
 
-const DepositModal = ({ showModal, handleClose, customerId, accountId, fetchCustomerData }) => {
+const DepositModal = ({ showModal, handleClose, customerId, accounts, fetchCustomerData }) => {
   const [amount, setAmount] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -15,11 +16,16 @@ const DepositModal = ({ showModal, handleClose, customerId, accountId, fetchCust
       return;
     }
 
+    if (!selectedAccount) {
+      toast.error('Please select an account');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const token = localStorage.getItem('AuthToken');
-      await depositToAccount(token, customerId, accountId, amount);
+      await depositToAccount(token, customerId, selectedAccount, amount);
       toast.success('Deposit successful');
       fetchCustomerData(); // Refresh customer data
       handleClose();
@@ -38,6 +44,18 @@ const DepositModal = ({ showModal, handleClose, customerId, accountId, fetchCust
         <h2>Deposit Money</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
+            <label>Account</label>
+            <select
+              value={selectedAccount}
+              onChange={(e) => setSelectedAccount(e.target.value)}
+            >
+              <option value="">Select an account</option>
+              {accounts.map((account) => (
+                <option key={account.accountNumber} value={account.accountNumber}>
+                  {account.accountNumber}
+                </option>
+              ))}
+            </select>
             <label>Amount</label>
             <input
               type="number"

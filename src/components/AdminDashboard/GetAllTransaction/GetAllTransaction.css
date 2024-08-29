@@ -2,14 +2,14 @@
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin: 10px 0;
+    margin: 0; /* Removed margin */
     font-family: Arial, sans-serif;
     color: #333;
 }
 
 .table th, .table td {
     border: 1px solid #e0e0e0;
-    padding: 12px;
+    padding: 4px; /* Reduced padding */
     text-align: left;
 }
 
@@ -32,13 +32,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin: 0; /* Removed margin */
     font-family: Arial, sans-serif;
 }
 
 .pagination button {
-    margin: 0 8px;
-    padding: 12px 24px;
+    margin: 0; /* Removed margin */
+    padding: 4px 8px; /* Reduced padding */
     border: 1px solid #007BFF; /* Blue border */
     background-color: #007BFF; /* Blue background */
     color: white; /* White text */
@@ -63,20 +63,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 10px 0;
+    margin: 0; /* Removed margin */
     font-family: Arial, sans-serif;
 }
 
 .page-size-selector label {
-    margin-right: 10px;
+    margin: 0; /* Removed margin */
     font-weight: bold;
 }
 
 .page-size-selector select {
-    padding: 8px;
+    padding: 4px; /* Reduced padding */
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 14px; /* Smaller font size */
     cursor: pointer;
     transition: border-color 0.3s;
 }
@@ -86,47 +86,59 @@
     outline: none;
 }
 
+/* Go Back Button Styling */
 .btn-go-back {
     background-color: #007bff; /* Blue background */
     color: white; /* White text */
     border: none; /* Remove border */
-    padding: 10px 20px; /* Add padding */
-    border-radius: 5px; /* Rounded corners */
+    padding: 4px 8px; /* Reduced padding */
+    border-radius: 4px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition */
 }
 
 .btn-go-back:hover {
     background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Darker blue border on hover */
 }
 
+.btn-go-back:disabled {
+    background-color: #e0e0e0; /* Light grey background when disabled */
+    color: #b0b0b0; /* Grey text when disabled */
+    cursor: not-allowed; /* Not-allowed cursor when disabled */
+}
+
+/* Header Styling */
 .header {
     display: flex;
     justify-content: flex-end; /* Align items to the right */
-    margin-bottom: 20px; /* Space below the header */
+    margin: 0; /* Removed margin */
 }
 
-* Search Section Styling */
+/* Search Section Styling */
 .search-section {
-    margin-bottom: 20px; /* Space below search section */
+    margin: 0; /* Removed margin */
+    padding: 0; /* Removed padding */
 }
 
 .search-by-id, .search-by-date {
-    margin-bottom: 10px; /* Space below each search input */
+    margin: 0; /* Removed margin */
+    padding: 0; /* Removed padding */
 }
 
 .search-by-id input, .search-by-date input {
-    padding: 8px;
+    padding: 4px; /* Reduced padding */
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 16px;
-    margin-right: 10px;
+    font-size: 14px; /* Smaller font size */
+    margin-right: 4px; /* Reduced margin */
 }
 
 .search-by-id button, .search-by-date button {
     background-color: #007bff; /* Blue background */
     color: white; /* White text */
     border: none; /* Remove border */
-    padding: 8px 16px; /* Add padding */
+    padding: 4px 8px; /* Reduced padding */
     border-radius: 4px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
     transition: background-color 0.3s;
@@ -136,22 +148,16 @@
     background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Header Styling */
-.header {
-    display: flex;
-    justify-content: flex-end; /* Align items to the right */
-    margin-bottom: 20px; /* Space below the header */
-}
-
 /* Heading Styling */
 h1 {
     margin-top: 0; /* Align heading to the top */
-    margin-bottom: 20px; /* Space below the heading */
+    margin-bottom: 8px; /* Reduced space below the heading */
 }
 
 .btn-reset {
     background-color: #f44336; /* Red background for reset */
     border-color: #f44336;
+    padding: 4px 8px; /* Reduced padding */
 }
 
 .btn-reset:hover {

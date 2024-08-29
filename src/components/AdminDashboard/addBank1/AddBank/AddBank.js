@@ -1,9 +1,8 @@
-// src/components/AdminDashboard/AddBankModal.js
+
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { addBank } from '../../../services/apiService';
-//import { addBank } from '../../services/apiService'; // Adjust path as necessary
 import './AddBank.css'
+import { addBank } from '../../../../services/apiService';
 
 const AddBankModal = ({ showModal, handleClose, fetchBanks }) => {
   const [fullName, setFullName] = useState('');
@@ -24,7 +23,7 @@ const AddBankModal = ({ showModal, handleClose, fetchBanks }) => {
       const token = localStorage.getItem('AuthToken');
       await addBank(token, { fullName, abbreviation, isActive: true });
       toast.success('Bank added successfully');
-      fetchBanks(); // Refresh the bank list
+      fetchBanks(); 
       handleClose();
     } catch (error) {
       toast.error('Failed to add bank');

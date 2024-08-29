@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAllAccounts, getAccountsByCustomerId, getAccountById, getActiveAccounts, getInactiveAccounts } from '../../../services/apiService'; 
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getAllAccounts, getAccountsByCustomerId, getAccountById, getActiveAccounts, getInactiveAccounts } from '../../../../services/apiService';
 import './GetAllAccounts.css'; 
+
 
 const GetAllAccounts = () => {
     const [accounts, setAccounts] = useState([]);
@@ -13,13 +14,28 @@ const GetAllAccounts = () => {
     const [isLast, setIsLast] = useState(false);
     const [searchBy, setSearchBy] = useState('all');
     const [searchValue, setSearchValue] = useState('');
+    const [searchInputValue, setSearchInputValue] = useState(''); 
+    const [fetchData, setFetchData] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        fetchAccounts();
-    }, [page, size]);
+        const queryParams = new URLSearchParams(location.search);
+        setPage(parseInt(queryParams.get('pageNumber'), 10) || 0);
+        setSize(parseInt(queryParams.get('pageSize'), 10) || 5);
+        setSearchBy(queryParams.get('searchBy') || 'all');
+        setSearchValue(queryParams.get('searchValue') || '');
+        setFetchData(true); 
+    }, [location.search]);
 
-    const fetchAccounts = async () => {
+    useEffect(() => {
+        if (fetchData) {
+            fetchAccounts(page, size, searchBy, searchValue);
+            setFetchData(false); 
+        }
+    }, [page, size, searchBy, searchValue, fetchData]);
+
+    const fetchAccounts = async (page, size, searchBy, searchValue) => {
         const token = localStorage.getItem('AuthToken');
         if (!token) {
             console.error('No token found');
@@ -35,13 +51,13 @@ const GetAllAccounts = () => {
                     break;
                 case 'accountNumber':
                     result = await getAccountById(token, searchValue);
-                    result = { content: [result] }; // Adjust to match paginated response structure
+                    result = { content: [result] }; 
                     break;
                 case 'active':
-                    result = await getActiveAccounts(token);
+                    result = await getActiveAccounts(token, page, size);
                     break;
                 case 'inactive':
-                    result = await getInactiveAccounts(token);
+                    result = await getInactiveAccounts(token, page, size);
                     break;
                 default:
                     result = await getAllAccounts(token, page, size);
@@ -54,11 +70,17 @@ const GetAllAccounts = () => {
                 setColumns([]);
                 setAccounts([]);
             }
-            setPage(result.page);
-            setSize(result.size);
             setTotalPages(result.totalPages);
             setTotalElements(result.totalElements);
             setIsLast(result.isLast);
+
+            const queryParams = new URLSearchParams();
+            queryParams.set("pageSize", size);
+            queryParams.set("pageNumber", page);
+            queryParams.set("searchBy", searchBy);
+            if (searchValue) queryParams.set("searchValue", searchValue);
+
+            navigate({ search: queryParams.toString() }, { replace: true });
         } catch (error) {
             console.error('Error fetching accounts:', error);
         }
@@ -66,44 +88,43 @@ const GetAllAccounts = () => {
 
     const handleSearchByChange = (e) => {
         setSearchBy(e.target.value);
+        setSearchInputValue(''); 
         setPage(0);
     };
 
-    const handleSearchValueChange = (e) => {
-        setSearchValue(e.target.value);
+    const handleSearchInputChange = (e) => {
+        setSearchInputValue(e.target.value);
+    };
+
+    const handleSearch = () => {
+        setSearchValue(searchInputValue); 
+        setPage(0);
+        setFetchData(true);
     };
 
     const handlePageSizeChange = (e) => {
         setSize(parseInt(e.target.value, 10));
         setPage(0);
-    };
-
-    const handleSearch = () => {
-        setPage(0);
-        fetchAccounts();
-    };
-
-    const handleReset = () => {
-        setSearchBy('all');
-        setSearchValue('');
-        setPage(0);
-        fetchAccounts();
+        setFetchData(true);
     };
 
     const handleGoBack = () => {
         navigate('/admin-dashboard');
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('AuthToken'); 
-        navigate('/login');
+    const resetFilters = () => {
+        setSearchBy('all');
+        setSearchInputValue('');
+        setSearchValue('');
+        setPage(0);
+        setSize(5); 
+        setFetchData(true);
     };
 
     return (
         <div>
             <div className="header">
                 <button onClick={handleGoBack} className="btn btn-go-back">Go Back</button>
-                <button onClick={handleLogout} className="btn btn-logout">Logout</button>
             </div>
             <h1>All Accounts</h1>
             <div className="search-filter">
@@ -119,12 +140,12 @@ const GetAllAccounts = () => {
                     <input
                         type="text"
                         placeholder={`Enter ${searchBy}`}
-                        value={searchValue}
-                        onChange={handleSearchValueChange}
+                        value={searchInputValue} 
+                        onChange={handleSearchInputChange}
                     />
                 )}
                 <button onClick={handleSearch} className="btn btn-search">Search</button>
-                <button onClick={handleReset} className="btn btn-reset">Reset</button>
+                <button onClick={resetFilters} className="btn btn-reset">Reset</button>
             </div>
             <div className="page-size-selector">
                 <label htmlFor="pageSize">Page Size:</label>
@@ -162,17 +183,24 @@ const GetAllAccounts = () => {
             ) : (
                 <p>No accounts found.</p>
             )}
+
             <div className="pagination">
                 <button 
                     disabled={page === 0} 
-                    onClick={() => setPage(page - 1)}
+                    onClick={() => {
+                        setPage(prevPage => prevPage - 1);
+                        setFetchData(true);
+                    }}
                 >
                     Previous
                 </button>
                 <span>Page {page + 1} of {totalPages}</span>
                 <button 
                     disabled={isLast} 
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => {
+                        setPage(prevPage => prevPage + 1);
+                        setFetchData(true);
+                    }}
                 >
                     Next
                 </button>

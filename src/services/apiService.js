@@ -2,9 +2,29 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { handleApiError } from '../utils/error/Error';
 const API_BASE_URL = 'http://localhost:8088/api';
 
+
+
+export const registerUser = async (formData) => {
+    try {
+        await axios.post(`${API_BASE_URL}/auth/register`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        toast.success("Registration successful");
+    } catch (error) {
+        console.error("Error registering:", error);
+        toast.error("Failed to register. Please check your details.");
+        throw error; 
+    }
+};
+
+
 export const getAllCustomers = async (token, page, size) => {
+    console.log("helllooo")
     try {
         const response = await axios.get(`${API_BASE_URL}/customers/all`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -16,22 +36,28 @@ export const getAllCustomers = async (token, page, size) => {
     }
 };
 
-export const getCustomerById = async ( customerId) => {
-    console.log(customerId)
+
+export const getCustomerById = async (customerId) => {
+    const token = localStorage.getItem('AuthToken');
+    if (!token) {
+        throw new Error('No token found');
+    }
+
     try {
-        console.log("hii")
-        const response = await axios.get(`http://localhost:8088/api/customers/${customerId}`,{
-            headers:{
-               Authorization:`Bearer ${localStorage.getItem('AuthToken')}` 
+        console.log("Fetching customer by ID...");
+        const response = await axios.get(`http://localhost:8088/api/customers/${customerId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
         });
-        console.log(response.data)
+        console.log("Response data:", response.data);
         return response.data;
     } catch (error) {
-       console.log(error.message)
-        //throw error;
+        console.error("Error fetching customer by ID:", error.message);
+        throw error; // Re-throwing the error to be handled by the caller
     }
 };
+
 
 export const getCustomersByFirstName = async (token, firstName, page, size) => {
     try {
@@ -143,6 +169,7 @@ export const createAccount = async (token, accountData) => {
 
   
 
+
 export const getAllTransactions = async (token, page = 0, size = 10) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/transactions/all`, {
@@ -153,8 +180,9 @@ export const getAllTransactions = async (token, page = 0, size = 10) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching transactions:', error);
-        toast.error('Failed to fetch transactions');
+        const errorMessage = handleApiError(error);
+        toast.error(errorMessage);
+        console.error('Error fetching transactions:', errorMessage);
         throw error;
     }
 };
@@ -266,7 +294,7 @@ export const getAllBanks = async (token, page, size) => {
     }
 };
 
-// Add to apiService.js
+
 
 export const getBankById = async (token, bankId) => {
     try {
@@ -333,7 +361,7 @@ export const getCustomerDetails = async (token, customerId) => {
     }
 };
 
-// Fetch total balance
+
 export const getTotalBalance = async (token) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/accounts/total-balance`, {
@@ -378,7 +406,8 @@ export const FetchTotalBalance = async (customerId) => {
   };
 
 
-  export const withdrawFromAccount = async (token, customerId, accountId, amount) => {
+
+export const withdrawFromAccount = async (token, customerId, accountId, amount) => {
     try {
         const response = await axios.post(
             `${API_BASE_URL}/customers/${customerId}/accounts/${accountId}/withdraw`,
@@ -390,31 +419,57 @@ export const FetchTotalBalance = async (customerId) => {
         );
         return response.data;
     } catch (error) {
-        console.error('Error during withdrawal:', error);
-        toast.error('Failed to withdraw from account');
+        const errorMessage = handleApiError(error);
+        toast.error(errorMessage);
+        console.error('Error during withdrawal:', errorMessage);
         throw error;
     }
 };
 
 export const depositToAccount = async (token, customerId, accountId, amount) => {
     try {
-        const response = await axios.post(
-            `${API_BASE_URL}/customers/${customerId}/accounts/${accountId}/deposit`,
-            null,
-            {
-                params: { amount },
-                headers: { Authorization: `Bearer ${token}` }
-            }
-        );
-        return response.data;
+      const response = await axios.post(
+        `${API_BASE_URL}/customers/${customerId}/accounts/${accountId}/deposit`,
+        null,
+        {
+          params: { amount },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      return response.data;
     } catch (error) {
-        console.error('Error during deposit:', error);
-        toast.error('Failed to deposit to account');
-        throw error;
+      console.error('Error during deposit:', error);
+      toast.error('Failed to deposit to account');
+      throw error;
     }
-};
+  };;
 
 
+export const makeTransaction = async (token, customerId, senderAccountNumber, receiverAccountNumber, amount) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/transactions`,
+        {
+          senderAccountNumber,
+          receiverAccountNumber,
+          amount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      console.log('Transaction response:', response.data); // Log the successful response
+      return response.data;
+    } catch (error) {
+      console.error('Transaction error:', error); // Log the error for debugging
+      throw new Error(error.response?.data?.message || 'Transaction failed');
+    }
+  };
+
+  
 export const verifyAdminAccess = async (setIsAdmin) => {
     const token = localStorage.getItem('AuthToken');
 

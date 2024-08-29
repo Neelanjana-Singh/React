@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import Pagination from '../Pagination/Pagination';
 import PageSize from '../Pagination/PageSize';
 import './Table.css';
-import { updateCustomer, getAccountsByCustomerId, deactivateCustomerAndAccounts, createAccount } from '../../../services/apiService';
+import { updateCustomer, getAccountsByCustomerId, deactivateCustomerAndAccounts, createAccount } from '../../services/apiService';
 
 const Table = ({ customers, currentPage, pageSize, totalPages, setCurrentPage, setPageSize, fetchCustomers }) => {
   const [showModal, setShowModal] = useState(false);
@@ -156,6 +156,8 @@ const Table = ({ customers, currentPage, pageSize, totalPages, setCurrentPage, s
                     Edit
                   </button>
                 </td>
+
+
                 <td>
                   <button
                     className="btn btn-info"
@@ -164,9 +166,11 @@ const Table = ({ customers, currentPage, pageSize, totalPages, setCurrentPage, s
                     View Accounts
                   </button>
                 </td>
+
+
                 <td>
                   <button
-                    className="btn btn-success" // Changed to green
+                    className="btn btn-success" 
                     onClick={() => {
                       setSelectedCustomerId(customer.customerId);
                       setShowCreateAccountModal(true);
@@ -175,6 +179,8 @@ const Table = ({ customers, currentPage, pageSize, totalPages, setCurrentPage, s
                     Create Account
                   </button>
                 </td>
+
+                
                 <td>
                   <button
                     className="btn btn-danger"
